@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="mapa">
+        <div class="container_mapa">
+            <h2>
+                Mapa de Endereços
+                <button class="btn-back" onclick="goBack()">Voltar</button>
+            </h2>
+            <div id="map"></div>
+        </div>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script>
+            const locationData = JSON.parse('{{ data | tojson | safe }}');
+
+            const map = L.map('map').setView([-23.55, -46.63], 12); // Centro de SP
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            locationData.forEach(loc => {
+                L.marker([loc.lat, loc.lon]).addTo(map)
+                    .bindPopup(loc.endereco);
+            });
+        </script>
+        <script>
+            function goBack() {
+                window.history.back();  // Função para voltar à página anterior
+            }
+        </script>
+    </div>
+</body>
+</html>
